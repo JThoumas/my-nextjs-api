@@ -1,15 +1,20 @@
-// src/app/api/users/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '../../../../lib/db'; // Note the path is ../../../../
+import { pool } from '../../../../lib/db';
+
+// Define the expected context type based on the Vercel error log
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
 
 /**
  * Handles GET /api/users/:id
  * Fetches a single user by their ID.
  */
-export async function GET(request: NextRequest, context: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: RouteContext) {
   try {
-    // 1. Get ID from context.params
-    const id = parseInt(context.params.id, 10);
+    // 1. Await the params promise to resolve
+    const params = await context.params;
+    const id = parseInt(params.id, 10);
     
     const query = 'SELECT * FROM users WHERE id = $1';
     const result = await pool.query(query, [id]);
@@ -29,10 +34,11 @@ export async function GET(request: NextRequest, context: { params: { id: string 
  * Handles PATCH /api/users/:id
  * Updates a single user's name.
  */
-export async function PATCH(request: NextRequest, context: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
-    // 1. Get ID from context.params
-    const id = parseInt(context.params.id, 10);
+    // 1. Await the params promise to resolve
+    const params = await context.params;
+    const id = parseInt(params.id, 10);
     const body = await request.json();
 
     if (!body.name) {
@@ -57,10 +63,11 @@ export async function PATCH(request: NextRequest, context: { params: { id: strin
  * Handles DELETE /api/users/:id
  * Deletes a single user by their ID.
  */
-export async function DELETE(request: NextRequest, context: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: RouteContext) {
   try {
-    // 1. Get ID from context.params
-    const id = parseInt(context.params.id, 10);
+    // 1. Await the params promise to resolve
+    const params = await context.params;
+    const id = parseInt(params.id, 10);
 
     const query = 'DELETE FROM users WHERE id = $1 RETURNING *';
     const result = await pool.query(query, [id]);
