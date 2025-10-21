@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '../../../lib/db';
 import bcrypt from 'bcrypt';
 
@@ -19,7 +19,7 @@ export async function GET() {
 /**
  * Handles POST /api/users for user signup
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { username, password } = await request.json();
 

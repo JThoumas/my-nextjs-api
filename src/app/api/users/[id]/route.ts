@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { pool } from '../../../../lib/db'; // Note the path is one level deeper
+import { NextRequest, NextResponse } from 'next/server';
+import { pool } from '../../../../lib/db';
 
 // Define a type for our route parameters
 type Params = {
@@ -12,7 +12,7 @@ type Params = {
  * Handles GET /api/users/:id
  * Fetches a single user by their ID.
  */
-export async function GET(request: Request, { params }: Params) {
+export async function GET(request: NextRequest, { params }: Params) {
   try {
     const id = parseInt(params.id, 10);
     const query = 'SELECT * FROM users WHERE id = $1';
@@ -33,7 +33,7 @@ export async function GET(request: Request, { params }: Params) {
  * Handles PATCH /api/users/:id
  * Updates a single user's name. (PATCH is for partial updates)
  */
-export async function PATCH(request: Request, { params }: Params) {
+export async function PATCH(request: NextRequest, { params }: Params) {
   try {
     const id = parseInt(params.id, 10);
     const body = await request.json();
@@ -60,7 +60,7 @@ export async function PATCH(request: Request, { params }: Params) {
  * Handles DELETE /api/users/:id
  * Deletes a single user by their ID.
  */
-export async function DELETE(request: Request, { params }: Params) {
+export async function DELETE(request: NextRequest, { params }: Params) {
   try {
     const id = parseInt(params.id, 10);
     const query = 'DELETE FROM users WHERE id = $1 RETURNING *';
